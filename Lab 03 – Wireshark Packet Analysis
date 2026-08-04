@@ -1,0 +1,211 @@
+Objective
+
+The objective of this lab was to capture and analyze live network traffic using Wireshark. Two virtual machines connected through an Internal Network in Oracle VirtualBox were used to generate network traffic, which was then captured and analyzed to understand how devices communicate over a network.
+
+---
+
+Lab Environment
+
+| Component               | Details                   |
+| ----------------------- | ------------------------- |
+| Host Operating System   | Windows 10                |
+| Hypervisor              | Oracle VirtualBox         |
+| Ubuntu Virtual Machine  | 192.168.100.10            |
+| Windows Virtual Machine | 192.168.100.20            |
+| Network Type            | Internal Network (LabNet) |
+| Network Interface       | enp0s8                    |
+| Packet Analyzer         | Wireshark                 |
+
+---
+
+Tools Used
+
+* Wireshark
+* Oracle VirtualBox
+* Ubuntu Linux
+* Windows 10
+* Command Prompt
+* ICMP (Ping)
+* ARP
+* TCP/IP
+
+---
+
+Objectives
+
+During this lab, I aimed to:
+
+* Capture live network traffic.
+* Analyze ICMP Echo Requests and Echo Replies.
+* Observe ARP communication between hosts.
+* Inspect IPv4 packet details.
+* Review Protocol Hierarchy statistics.
+* Analyze Conversations and Endpoints.
+
+---
+
+Step 1 – Launch Wireshark
+
+Wireshark was launched on the Ubuntu virtual machine, and the **enp0s8** interface (Internal Network) was selected for packet capture.
+
+**Screenshot:** `Screenshots/01-live-capture.png`
+
+---
+
+# Step 2 – Verify Network Connectivity
+
+Before capturing packets, both virtual machines were confirmed to be on the same network.
+
+| Device     | IP Address     |
+| ---------- | -------------- |
+| Ubuntu VM  | 192.168.100.10 |
+| Windows VM | 192.168.100.20 |
+
+This confirmed successful communication over the Internal Network.
+
+
+Step 3 – Generate ICMP Traffic
+
+From the Windows virtual machine, network traffic was generated using the following command:
+
+```cmd
+ping 192.168.100.10
+
+
+Wireshark successfully captured the ICMP traffic between the Windows and Ubuntu virtual machines.
+
+The capture included:
+
+* Echo Request packets
+* Echo Reply packets
+
+Applying the display filter below made it easier to analyze only ICMP traffic:
+
+icmp
+
+
+ Step 4 – Inspect Packet Details
+
+A captured ICMP packet was examined in detail.
+
+The following protocol layers were analyzed:
+
+* Frame
+* Ethernet II
+* Internet Protocol Version 4 (IPv4)
+* Internet Control Message Protocol (ICMP)
+
+Echo Request
+
+* Source IP: 192.168.100.20
+* Destination IP: 192.168.100.10
+* ICMP Type: **8 (Echo Request)**
+
+ Echo Reply
+
+* Source IP: 192.168.100.10
+* Destination IP: 192.168.100.20
+* ICMP Type: 0 (Echo Reply)
+
+This confirmed successful communication between both virtual machines.
+
+---
+
+# Step 5 – Analyze ARP Traffic
+
+The display filter was changed to:
+
+arp
+
+ARP packets were analyzed to observe how devices resolve IP addresses to MAC addresses before communication begins.
+
+This demonstrated the Address Resolution Protocol (ARP) process within a local network.
+
+---
+
+# Step 6 – Analyze TCP Traffic
+
+The display filter was changed to:
+
+```text
+tcp
+```
+
+Captured TCP packets were examined to observe connection-oriented communication between devices.
+
+TCP provides reliable communication through acknowledgements, sequencing, and error checking.
+
+---
+
+# Step 7 – Protocol Hierarchy
+
+The Protocol Hierarchy feature in Wireshark was used to summarize all captured protocols.
+
+Protocols observed included:
+
+* Ethernet II
+* IPv4
+* ICMP
+* ARP
+* TCP
+
+This feature provided a quick overview of the traffic captured during the session.
+
+Screenshot: `Screenshots/06-protocol-hierarchy.png`
+
+Step 8 – Conversations
+
+Using **Statistics → Conversations**, communication between hosts was analyzed.
+
+The conversation statistics confirmed successful communication between:
+
+* Windows VM (192.168.100.20)
+* Ubuntu VM (192.168.100.10)
+
+# Step 9 – Endpoints
+
+Using Statistics → Endpoints, the active network devices involved in the capture were identified.
+
+Observed endpoints included:
+
+ 192.168.100.10
+ 192.168.100.20
+
+The endpoint statistics also displayed packet counts and traffic exchanged by each host.
+
+Screenshot: `Screenshots/08-endpoints.png`
+
+Findings
+
+During this lab, the following observations were made:
+
+* Live network traffic was successfully captured using Wireshark.
+* ICMP Echo Requests and Echo Replies confirmed successful connectivity between the virtual machines.
+* ARP packets demonstrated how MAC addresses are resolved before IP communication occurs.
+* IPv4 packet headers contained the source and destination IP addresses used during communication.
+* TCP traffic illustrated reliable communication between hosts.
+* Protocol Hierarchy summarized all captured protocols.
+* Conversation statistics identified communication between the two virtual machines.
+* Endpoint statistics identified all active hosts on the network.
+
+---
+
+Skills Demonstrated
+
+* Packet Capture
+* Wireshark Packet Analysis
+* Network Traffic Analysis
+* ICMP Analysis
+* ARP Analysis
+* TCP/IP Networking
+* IPv4 Analysis
+* VirtualBox Networking
+* Network Troubleshooting
+* Basic Security Monitoring
+
+
+Conclusion
+
+This lab provided practical experience in capturing and analyzing network traffic using Wireshark within an isolated VirtualBox environment. By generating and examining ICMP, ARP, IPv4, and TCP traffic, I gained a deeper understanding of how devices communicate and how packet analysis can be used for troubleshooting and security investigations.
+
+These are foundational skills required for entry-level SOC Analyst, Cybersecurity Analyst, and Network Support roles.
