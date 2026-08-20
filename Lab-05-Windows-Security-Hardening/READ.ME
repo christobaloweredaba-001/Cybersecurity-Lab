@@ -2,122 +2,213 @@
 
 ## Overview
 
-This lab focuses on improving the security posture of a Windows system by reviewing and applying common endpoint security hardening measures.
+This lab demonstrates practical Windows endpoint security hardening within a controlled virtual machine environment.
 
-The exercise was performed in a controlled Windows virtual machine environment using Oracle VirtualBox. The goal was to identify potentially weak configurations, apply appropriate security controls, and document the changes made.
+The assessment focused on reviewing existing Windows security controls, identifying weak configurations, applying appropriate hardening measures, and documenting the resulting security posture.
+
+The lab was performed on a Windows 10 22H2 virtual machine running **OS Build 19045.6466** in Oracle VirtualBox.
 
 ## Objectives
 
-* Assess the current security configuration of a Windows endpoint.
+* Assess the security configuration of a Windows endpoint.
 * Review Windows Firewall configuration.
-* Review Microsoft Defender security settings.
-* Verify User Account Control (UAC).
-* Review local user accounts and privileges.
-* Review password and account-lockout policies.
-* Identify unnecessary services and reduce the attack surface.
-* Verify Windows Update and security patch status.
-* Review Windows auditing and event logging.
-* Document security improvements and recommendations.
+* Verify Microsoft Defender security controls.
+* Review User Account Control (UAC).
+* Review local administrator privileges.
+* Assess and improve password security policies.
+* Document security findings and remediation actions.
+* Develop practical Windows endpoint hardening skills.
 
 ## Lab Environment
 
 **Virtualization Platform:** Oracle VirtualBox
 
-**Target System:** Windows Virtual Machine
+**Operating System:** Windows 10 22H2
 
-**Network:** Isolated VirtualBox laboratory network
+**OS Build:** 19045.6466
+
+**Environment:** Isolated cybersecurity laboratory
 
 ## Tools Used
 
-* Windows Security
-* Windows Defender
-* Windows Firewall
+* Windows Defender Firewall with Advanced Security
+* Windows Security / Microsoft Defender
+* User Account Control
+* Local Users and Groups
 * Local Security Policy
-* Computer Management
-* Services Management
-* Event Viewer
-* Windows Update
+* Windows Command Prompt
 * Oracle VirtualBox
 
-## Hardening Areas
+---
 
-### 1. Windows Firewall
+# Security Assessment
 
-The Windows Firewall configuration was reviewed to verify that firewall protection was enabled and that unnecessary network exposure was minimized.
+## 1. Windows Firewall
 
-### 2. Microsoft Defender
+### Initial Finding
 
-Windows Security settings were reviewed to verify that endpoint protection and security monitoring features were enabled.
+During the initial assessment, Windows Defender Firewall was found to be disabled across the:
 
-### 3. User Account Control
+* Domain Profile
+* Private Profile
+* Public Profile
 
-UAC configuration was reviewed to ensure that applications could not easily make administrative changes without user approval.
+This represented a security weakness because host-based firewall protection was not actively filtering network traffic.
 
-### 4. User Accounts and Privileges
+### Remediation
 
-Local accounts and administrative privileges were reviewed to identify unnecessary accounts or excessive privileges.
+Windows Defender Firewall was enabled across all three network profiles.
 
-### 5. Password and Account Policies
+The firewall was configured with the default inbound behavior of blocking inbound connections that do not match an existing firewall rule.
 
-Local security policies were reviewed, including password requirements and account-lockout settings.
+### Result
 
-### 6. Windows Services
+**Status: Remediated**
 
-Running Windows services were reviewed to identify unnecessary services that could increase the system's attack surface.
+The Windows Firewall now provides host-based protection against unsolicited inbound network connections.
 
-### 7. Windows Updates
+**Evidence:**
 
-Windows Update was checked to verify that the operating system was receiving security updates.
+* `01-firewall-before.png`
+* `01-firewall-after.png`
 
-### 8. Security Auditing
+---
 
-Windows Event Viewer and audit settings were reviewed to verify that relevant security activity could be monitored and investigated.
+## 2. Microsoft Defender
 
-## Findings
+Microsoft Defender security settings were reviewed.
 
-Findings will be documented during the practical assessment.
+The following protections were enabled:
 
-| Security Control   | Initial Status | Action Taken     | Final Status     |
-| ------------------ | -------------- | ---------------- | ---------------- |
-| Windows Firewall   | To be assessed | To be determined | To be determined |
-| Microsoft Defender | To be assessed | To be determined | To be determined |
-| UAC                | To be assessed | To be determined | To be determined |
-| User Accounts      | To be assessed | To be determined | To be determined |
-| Password Policy    | To be assessed | To be determined | To be determined |
-| Account Lockout    | To be assessed | To be determined | To be determined |
-| Windows Services   | To be assessed | To be determined | To be determined |
-| Windows Update     | To be assessed | To be determined | To be determined |
-| Security Auditing  | To be assessed | To be determined | To be determined |
+* Real-time protection
+* Cloud-delivered protection
+* Automatic sample submission
+* Tamper Protection
 
-## Screenshots
+### Result
 
-Screenshots and supporting evidence from the hardening exercise will be stored in the `Screenshots` directory.
+**Status: Secure**
 
-Evidence will include relevant configuration screens, security settings, policies, and verification results.
+No changes were required because the reviewed Microsoft Defender protections were already enabled.
 
-## Security Recommendations
+**Evidence:**
 
-Based on the assessment, recommended security practices include:
+`02-defender-settings.png`
 
-* Keep Windows Firewall enabled.
-* Maintain up-to-date endpoint protection.
-* Apply security updates regularly.
-* Use strong password policies.
-* Enable appropriate account-lockout controls.
-* Avoid unnecessary administrator privileges.
-* Disable unnecessary services where appropriate.
-* Maintain security auditing and event logging.
-* Regularly review local accounts and permissions.
-* Follow the principle of least privilege.
+---
 
-## Conclusion
+## 3. User Account Control
 
-This lab demonstrates practical Windows endpoint security hardening techniques.
+User Account Control was reviewed to determine whether applications require user approval when attempting to make administrative changes.
 
-The exercise provided hands-on experience with identifying security weaknesses, reviewing Windows security controls, applying appropriate configurations, and verifying the resulting security posture.
+The system was configured to notify the user when applications attempt to make changes to the computer.
 
-The project also demonstrates how endpoint hardening can reduce attack surface and improve the overall security of a Windows environment.
+### Result
+
+**Status: Appropriate**
+
+The existing UAC configuration provides an additional layer of protection against unauthorized administrative changes.
+
+**Evidence:**
+
+`03-uac-settings.png`
+
+---
+
+## 4. Local Administrator Privileges
+
+Local user and group configuration was reviewed.
+
+The local **Administrators** group contained:
+
+* Chris
+* Administrator
+
+No unnecessary additional personal accounts were identified as members of the Administrators group during the assessment.
+
+### Result
+
+**Status: Reviewed**
+
+Administrative privileges were reviewed as part of the endpoint security assessment.
+
+---
+
+## 5. Password Policy
+
+The initial password policy contained several weak configurations.
+
+### Before Hardening
+
+| Policy                  | Initial Configuration |
+| ----------------------- | --------------------- |
+| Minimum password length | 0                     |
+| Password complexity     | Disabled              |
+| Maximum password age    | 42 days               |
+| Password history        | 0 passwords           |
+
+The minimum password length and password complexity settings provided insufficient password protection.
+
+### Remediation
+
+The following changes were applied:
+
+| Policy                  | Final Configuration |
+| ----------------------- | ------------------- |
+| Minimum password length | 12 characters       |
+| Password complexity     | Enabled             |
+| Maximum password age    | 42 days             |
+| Password history        | 5 passwords         |
+
+### Result
+
+**Status: Hardened**
+
+The password policy was strengthened to require longer and more complex passwords while preventing immediate reuse of recently used passwords.
+
+**Evidence:**
+
+`04-password-policy-hardened.png`
+
+---
+
+# Summary of Findings
+
+| Security Control          | Initial State       | Action                            | Final State |
+| ------------------------- | ------------------- | --------------------------------- | ----------- |
+| Windows Firewall          | Disabled            | Enabled                           | Hardened    |
+| Inbound firewall behavior | Unprotected         | Default blocking applied          | Hardened    |
+| Microsoft Defender        | Protections enabled | No change required                | Secure      |
+| UAC                       | Appropriate         | No change required                | Secure      |
+| Administrator privileges  | Reviewed            | No unnecessary members identified | Reviewed    |
+| Password length           | 0                   | Increased to 12                   | Hardened    |
+| Password complexity       | Disabled            | Enabled                           | Hardened    |
+| Password history          | 0                   | Increased to 5                    | Hardened    |
+
+# Security Recommendations
+
+Based on the assessment:
+
+1. Keep Windows Firewall enabled across all network profiles.
+2. Maintain Microsoft Defender protections and Tamper Protection.
+3. Keep UAC enabled.
+4. Regularly review local administrator memberships.
+5. Enforce strong password requirements.
+6. Maintain appropriate password history controls.
+7. Regularly apply Windows security updates.
+8. Review Windows security logs for suspicious activity.
+9. Periodically reassess endpoint security configurations.
+
+# Conclusion
+
+This lab provided hands-on experience assessing and hardening a Windows endpoint.
+
+The assessment identified several security controls that were already appropriately configured, as well as weaknesses in the Windows Firewall and password policy.
+
+The firewall was enabled and configured to block unsolicited inbound connections, while the password policy was strengthened through increased minimum password length, password complexity requirements, and password history.
+
+The exercise demonstrates the importance of establishing a security baseline, identifying weaknesses, applying targeted remediation, and verifying the resulting configuration.
 
 ## Disclaimer
 
-This assessment was conducted exclusively on a Windows virtual machine within an authorized and isolated personal cybersecurity laboratory. No unauthorized systems or networks were targeted.
+This assessment was conducted exclusively on an authorized Windows virtual machine within an isolated personal cybersecurity laboratory. No unauthorized systems or networks were targeted.
