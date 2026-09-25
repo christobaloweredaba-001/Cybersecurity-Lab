@@ -44,3 +44,27 @@ Set up a Windows Server as an Active Directory Domain Controller, then join a Wi
 - Create additional OUs and users to build out a more realistic structure
 - Apply a Group Policy (e.g. password policy or desktop restrictions) and confirm it applies to the client
 - Look at basic AD security hardening and common misconfigurations
+
+- ## Part 2 — Security Groups and Group Policy
+
+After getting the domain and client working, I went further and configured centralized permissions and policy enforcement.
+
+### Security Groups
+
+Created a Security Group (`IT-Support-Team`) inside the IT-Department OU and added my test user to it. This is the standard way permissions are managed in AD — instead of granting access to individual users one at a time, you grant it to a group, and manage membership instead. Add or remove someone from the group, and their access updates automatically.
+
+### Group Policy
+
+Created a Group Policy Object (`Restrict-ControlPanel`) linked to the IT-Department OU, enabling "Prohibit access to Control Panel and PC settings" under User Configuration. Ran `gpupdate /force` on the domain-joined Windows 10 client to pull the policy down, then confirmed Control Panel was actually blocked when logged in as the domain user.
+
+This is the same mechanism real organizations use to enforce security settings, restrict access, and standardize configurations across every machine on a network — configured once, centrally, and pushed out automatically.
+
+### Issues I ran into
+
+- **`gpupdate /force` failed with a clock sync error.** Active Directory (via Kerberos) requires client and server clocks to be within about 5 minutes of each other. Since both VMs are on an isolated internal network with no internet access to auto-correct via NTP, their clocks had drifted apart over time. Fixed by manually syncing the time on both VMs and running `w32tm /resync`.
+- **The @ and # symbols wouldn't type at the Windows sign-in screen specifically** — worked fine everywhere else in the VM, including inside the same user's logged-in session. This turned out to be a known VirtualBox quirk with the secure sign-in screen not always forwarding certain keystrokes correctly. Fixed by using the on-screen keyboard (accessibility icon on the sign-in screen) to click the characters instead of typing them.
+
+## What's next
+- Explore more Group Policy settings (password policies, login scripts, drive mappings)
+- Look into delegation — giving a non-admin user limited rights to manage AD objects
+- Basic AD security hardening and common misconfiguration checks
